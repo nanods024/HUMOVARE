@@ -100,10 +100,8 @@ export default defineConfig({
          */
         manualChunks(id) {
           if (!id.includes('node_modules')) return undefined;
-          if (id.includes('react-router') || id.includes('@remix-run')) return 'vendor-router';
-          // React's scheduler belongs with React; left in `vendor` it made the
-          // two chunks import each other (a circular chunk warning).
-          if (id.includes('/react/') || id.includes('react-dom') || id.includes('/scheduler/')) return 'vendor-react';
+          if (id.includes('react-router')) return 'vendor-router';
+          if (id.includes('/react/') || id.includes('react-dom')) return 'vendor-react';
           if (id.includes('@tanstack')) return 'vendor-query';
           if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
             return 'vendor-forms';
