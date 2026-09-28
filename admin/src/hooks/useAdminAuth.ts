@@ -14,8 +14,6 @@ import { useSecurityStore } from '@/store/securityStore';
 import { toast } from '@/store/toastStore';
 import { queryClient as sharedQueryClient } from '@/lib/queryClient';
 
-let authBootstrapPromise: Promise<void> | null = null;
-
 /**
  * Restores the admin session on load.
  *
@@ -38,7 +36,7 @@ export function useAdminAuthBootstrap() {
 
     setStatus('loading');
 
-    authBootstrapPromise = (async () => {
+    (async () => {
       const ok = await refreshSession();
       if (!ok) {
         clearSession();
@@ -86,7 +84,6 @@ export function useAdminAuth() {
 
   const login = useCallback(
     async (payload: { email: string; password: string }) => {
-      await authBootstrapPromise;
       const session = await authApi.login(payload);
       setPolicy(session.security);
       setSignedOutReason(null);

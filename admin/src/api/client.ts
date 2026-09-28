@@ -1,7 +1,6 @@
 import axios, { AxiosError, type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 
-const CONFIGURED_BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '');
-const BASE_URL = import.meta.env.DEV ? '/api' : CONFIGURED_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export interface ApiEnvelope<T> {
   success: boolean;
