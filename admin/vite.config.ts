@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 
@@ -13,7 +13,18 @@ const ADMIN_SECURITY_HEADERS = {
 const CHART_PACKAGES =
   /node_modules[\\/](recharts|recharts-scale|victory-vendor|d3-[^\\/]+|internmap|lodash|decimal\.js-light|react-smooth|fast-equals|eventemitter3|react-transition-group|dom-helpers|tiny-invariant|react-is|prop-types|@babel[\\/]runtime)[\\/]/;
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const configuredApiUrl = env.VITE_API_URL || '/api';
+  let apiOrigin = 'http://localhost:5000';
+  try {
+    apiOrigin = new URL(configuredApiUrl).origin;
+  } catch {
+    // Relative API URLs use the local backend by default.
+  }
+  const proxyTarget = env.VITE_PROXY_TARGET || apiOrigin;
+
+  return {
   plugins: [react()],
 
   // Served from /admin on the same host as the storefront, so every asset
@@ -37,8 +48,12 @@ export default defineConfig({
     // HTTP-only admin cookies behave exactly as they will in production.
     proxy: {
       '/api': {
-        target: process.env.VITE_PROXY_TARGET || 'http://localhost:5000',
+        target: proxyTarget,
         changeOrigin: true,
+        cookieDomainRewrite: '',
+        configure(proxy) {
+          proxy.on('proxyReq', (proxyRequest) => proxyRequest.removeHeader('origin'));
+        },
       },
     },
   },
@@ -70,4 +85,5 @@ export default defineConfig({
       },
     },
   },
+  };
 });
