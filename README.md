@@ -112,7 +112,7 @@ discarded on exit. Nothing can touch a real database.
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Client and server together |
-| `npm run build` | Both front ends into one `dist/` folder (shop at `/`, admin at `/admin`) |
+| `npm run build` | Both front ends, admin bundled into `shop/dist/admin` |
 | `npm run build:shop` / `npm run build:admin` | One front end only |
 | `npm start` | Production API |
 | `npm run seed` | Seed a fresh database. **Rewrites the 18 seeded products**, so do not run it on a database with real edits |
