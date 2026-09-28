@@ -1,6 +1,10 @@
 import axios, { AxiosError, type AxiosRequestConfig, type InternalAxiosRequestConfig } from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || '/api';
+// Render's frontend and API use separate onrender.com hosts, which makes
+// cookie auth cross-site. The shop already proxies /api to the backend.
+const BASE_URL = window.location.hostname.endsWith('.onrender.com')
+  ? '/api'
+  : import.meta.env.VITE_API_URL || '/api';
 
 export interface ApiEnvelope<T> {
   success: boolean;
