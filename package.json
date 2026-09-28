@@ -1,0 +1,38 @@
+{
+  "name": "humovare",
+  "private": true,
+  "version": "1.0.0",
+  "description": "HUMOVARE — premium fashion e-commerce storefront (MERN, Phase 1)",
+  "workspaces": [
+    "shop",
+    "admin",
+    "server"
+  ],
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n server,shop,admin -c red,white,cyan \"npm:dev:server\" \"npm:dev:shop\" \"npm:dev:admin\"",
+    "dev:shop": "npm run dev --workspace shop",
+    "dev:admin": "npm run dev --workspace admin",
+    "dev:server": "npm run dev --workspace server",
+    "build": "npm run build:shop && npm run build:admin && npm run bundle:admin",
+    "bundle:admin": "node -e \"require('fs').cpSync('admin/dist','shop/dist/admin',{recursive:true})\"",
+    "build:shop": "npm run build --workspace shop",
+    "build:admin": "npm run build --workspace admin",
+    "start": "npm run start --workspace server",
+    "seed": "npm run seed --workspace server",
+    "seed:admin": "npm run seed:admin --workspace server",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "test:smoke": "npm run test:smoke --workspace server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.4.2"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
+}

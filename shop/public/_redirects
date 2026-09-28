@@ -1,0 +1,8 @@
+# The admin bundle is copied to /admin by `npm run build`. Both rules must sit
+# above the storefront catch-all, or a refresh inside the portal renders the
+# shop's 404 page.
+/admin        /admin/            301
+/admin/*      /admin/index.html  200
+
+# Client-side routing: every unknown path serves the storefront shell.
+/*            /index.html        200

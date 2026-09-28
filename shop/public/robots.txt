@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Nothing behind authentication or mid-funnel should be indexed.
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /order-success
+Disallow: /search?
+

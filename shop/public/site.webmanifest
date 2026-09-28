@@ -1,0 +1,16 @@
+{
+  "name": "HUMOVARE",
+  "short_name": "HUMOVARE",
+  "description": "Premium essentials. Distinct identity.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+@import './styles/theme.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply border-line;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    /* Prevents the layout shifting sideways when a modal locks scrolling. */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display uppercase;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* A visible, branded focus ring — never remove the outline outright. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-canvas;
+  }
+
+  /* Hide the ring for pointer users while keeping it for keyboard users. */
+  :focus:not(:focus-visible) {
+    @apply outline-none;
+  }
+
+  img {
+    @apply max-w-full;
+  }
+
+  /* Remove the number input spinners from quantity fields. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer components {
+  /* Consistent page gutter and max width for every section. */
+  .container-page {
+    @apply mx-auto w-full max-w-page px-gutter;
+  }
+
+  /* The small all-caps label used above section headings. */
+  .eyebrow {
+    @apply text-eyebrow font-semibold uppercase tracking-brand text-ink-muted;
+  }
+
+  /**
+   * Instagram sizes its embed iframe from a postMessage the post sends back.
+   * When that is slow, blocked by an extension, or the post has been deleted,
+   * the iframe is left a couple of pixels tall and the card renders blank.
+   * A floor keeps the card looking like a card either way — Instagram is still
+   * free to grow it past this.
+   */
+  .instagram-card .instagram-media {
+    min-height: 26rem !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    border-radius: 0.375rem !important;
+  }
+
+  /* Horizontally scrollable rails on mobile, hidden scrollbar. */
+  .scroll-rail {
+    @apply flex snap-x snap-mandatory overflow-x-auto scroll-smooth;
+    scrollbar-width: none;
+  }
+  .scroll-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  /**
+   * A rail of Instagram embeds, whose cards Instagram resizes after they load.
+   * Mandatory snapping fights that — it re-snaps mid-resize and can strand the
+   * scroll position — so this variant asks for proximity instead, and reserves
+   * the gutter so a snapped card is not tucked under the page padding.
+   */
+  .scroll-rail-soft {
+    scroll-snap-type: x proximity;
+    scroll-padding-left: var(--page-gutter, 1rem);
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden rounded-xl bg-surface;
+  }
+  .skeleton::after {
+    @apply absolute inset-0;
+    content: '';
+    transform: translateX(-100%);
+    /* A soft warm sweep — a white shimmer would glare on the dark canvas. */
+    background-image: linear-gradient(
+      90deg,
+      rgb(var(--color-text) / 0) 0,
+      rgb(var(--color-text) / 0.07) 50%,
+      rgb(var(--color-text) / 0) 100%
+    );
+    animation: shimmer 1.6s infinite;
+  }
+}
+
+@layer utilities {
+  /* Visually hidden but available to screen readers. */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Clamp helpers for product titles in a fixed-height card. */
+}
+
+/* ── Sign-in pages: motion and soft edges ─────────────────────────────────── */
+
+/* Lets the glowing edge rotate smoothly (falls back to a still edge). */
+@property --auth-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes auth-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes auth-edge { to { --auth-angle: 360deg; } }
+@keyframes auth-float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(24px, -28px, 0) scale(1.08); }
+}
+@keyframes auth-shine {
+  0% { transform: translateX(-130%) skewX(-20deg); }
+  45%, 100% { transform: translateX(260%) skewX(-20deg); }
+}
+@keyframes auth-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(var(--color-primary) / 0.55); }
+  70% { box-shadow: 0 0 0 7px rgb(var(--color-primary) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--color-primary) / 0); }
+}
+
+/* Children glide in one after another. */
+.auth-stagger > * { animation: auth-rise 650ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.auth-stagger > *:nth-child(1) { animation-delay: 120ms; }
+.auth-stagger > *:nth-child(2) { animation-delay: 190ms; }
+.auth-stagger > *:nth-child(3) { animation-delay: 260ms; }
+.auth-stagger > *:nth-child(4) { animation-delay: 330ms; }
+.auth-stagger > *:nth-child(5) { animation-delay: 400ms; }
+.auth-stagger > *:nth-child(6) { animation-delay: 470ms; }
+.auth-stagger > *:nth-child(n + 7) { animation-delay: 540ms; }
+
+/* The card: rounded, softly frosted, with a light travelling round its edge. */
+.auth-card {
+  position: relative;
+  border-radius: 1.75rem;
+  animation: auth-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.auth-card::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--auth-angle),
+    rgb(255 255 255 / 0.25) 0deg,
+    rgb(255 255 255 / 0.25) 200deg,
+    rgb(var(--color-primary)) 270deg,
+    rgb(255 255 255) 300deg,
+    rgb(255 255 255 / 0.25) 340deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: auth-edge 6s linear infinite;
+}
+/* Shared form parts inside the card (register, reset…) get soft corners too. */
+.auth-card input:not([type='checkbox']):not([type='radio']),
+.auth-card button,
+.auth-card select,
+.auth-card textarea {
+  border-radius: 0.875rem;
+}
+
+/* A light that sweeps across the main button every few seconds. */
+.auth-shine { position: relative; overflow: hidden; isolation: isolate; }
+.auth-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  animation: auth-shine 3.6s ease-in-out 1.4s infinite;
+}
+
+.auth-float { animation: auth-float 14s ease-in-out infinite; }
+.auth-pulse { animation: auth-pulse 2s ease-out infinite; }
+
+/* ── Account area: soft, premium surfaces with gentle motion ──────────────── */
+.acct-stagger > * { animation: auth-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.acct-stagger > *:nth-child(1) { animation-delay: 40ms; }
+.acct-stagger > *:nth-child(2) { animation-delay: 110ms; }
+.acct-stagger > *:nth-child(3) { animation-delay: 180ms; }
+.acct-stagger > *:nth-child(4) { animation-delay: 250ms; }
+.acct-stagger > *:nth-child(5) { animation-delay: 320ms; }
+.acct-stagger > *:nth-child(6) { animation-delay: 390ms; }
+.acct-stagger > *:nth-child(n + 7) { animation-delay: 450ms; }
+
+/* Skeleton sweep. */
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* Quicker stagger for things that must feel instant, like search results. */
+.search-stagger > * { animation: auth-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.search-stagger > *:nth-child(1) { animation-delay: 20ms; }
+.search-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.search-stagger > *:nth-child(3) { animation-delay: 80ms; }
+.search-stagger > *:nth-child(4) { animation-delay: 110ms; }
+.search-stagger > *:nth-child(5) { animation-delay: 140ms; }
+.search-stagger > *:nth-child(6) { animation-delay: 170ms; }
+.search-stagger > *:nth-child(n + 7) { animation-delay: 200ms; }
+
+.acct-card {
+  border-radius: 1.25rem;
+  border: 1px solid rgb(var(--color-border));
+  background: rgb(var(--color-background));
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -20px rgb(0 0 0 / 0.18);
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease, border-color 300ms ease;
+}
+.acct-card-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgb(var(--color-primary) / 0.35);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.04), 0 22px 44px -22px rgb(var(--color-primary) / 0.45);
+}
+
+/* Shared form parts inside the account area get soft corners. */
+.acct-scope input:not([type='checkbox']):not([type='radio']),
+.acct-scope select,
+.acct-scope textarea,
+.acct-scope button:not(.acct-raw) {
+  border-radius: 0.875rem;
+}
+.acct-scope input:not([type='checkbox']):not([type='radio']):focus,
+.acct-scope select:focus,
+.acct-scope textarea:focus {
+  border-color: rgb(var(--color-primary));
+  box-shadow: 0 0 0 4px rgb(var(--color-primary) / 0.12);
+}
+
+/* ── Order confirmed: the tick draws itself, sparks drift up ──────────────── */
+@keyframes success-draw { to { stroke-dashoffset: 0; } }
+@keyframes success-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes success-spark {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; }
+}
+.success-pop { animation: success-pop 700ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.success-draw {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: success-draw 600ms 450ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.success-spark { animation: success-spark 1600ms ease-out both; }
+
+/**
+ * Respect the OS "reduce motion" setting. Animations are decorative here, so
+ * they are switched off wholesale rather than being individually tuned.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,86 @@
+/**
+ * HUMOVARE brand tokens — the single source of truth for the palette.
+ *
+ * The storefront runs on a white canvas: white and warm off-white carry the
+ * page, a warm near-black carries the type, and the brand red is reserved
+ * for action — CTAs, sale badges, active states, the wishlist heart.
+ *
+ * Retuning the brand means editing the values here and nothing else —
+ * Tailwind reads every colour from these.
+ *
+ * Values are space-separated RGB channels so Tailwind can apply opacity
+ * (`bg-primary/10`) without needing a second token.
+ */
+
+:root {
+  /* Canvas ----------------------------------------------------------- */
+  --color-background: 255 255 255; /* #FFFFFF */
+  --color-surface: 246 244 243; /* #F6F4F3 — warm off-white */
+  --color-surface-alt: 236 232 230; /* #ECE8E6 — inset panels */
+  --color-surface-inverse: 20 3 5;
+
+  /* Type ------------------------------------------------------------- */
+  --color-text: 26 20 20; /* #1A1414 — warm near-black */
+  --color-muted: 110 100 98; /* #6E6462 — secondary copy */
+  --color-subtle: 154 144 142; /* #9A908E — captions, counts */
+
+  /* Lines ------------------------------------------------------------ */
+  --color-border: 229 224 222; /* #E5E0DE */
+
+  /**
+   * The maximum-contrast block: used for selected pills, secondary buttons
+   * and anything that needs to read as a solid slab. On a white canvas that
+   * is the brand near-black, and text sitting on it uses `canvas`.
+   */
+  --color-black: 20 3 5; /* #140305 */
+
+  /* Brand red -------------------------------------------------------- */
+  --color-primary: 200 22 29; /* #C8161D — CTAs, active states */
+  --color-primary-dark: 150 16 22; /* #961016 — hover / pressed */
+  --color-primary-light: 253 237 237; /* #FDEDED — soft tint background */
+  --color-primary-tint: 244 202 203; /* #F4CACB — borders on tinted areas */
+
+  /* Status ----------------------------------------------------------- */
+  --color-success: 22 128 70;
+  --color-warning: 176 114 10;
+  --color-danger: 190 30 34;
+
+  /* Layout ----------------------------------------------------------- */
+  --page-gutter: 1rem;
+  /* Single utility row. Sticky offsets elsewhere read this. */
+  --header-height: 5rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-gutter: 2rem;
+    --header-height: 7rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --page-gutter: 3.5rem;
+  }
+}
+
+/**
+ * Dark editorial blocks — the announcement strip and the occasional
+ * full-bleed section that should invert. The mirror image of the root scope,
+ * so every component works inside one unchanged.
+ *
+ * `--color-black` stays a *maximum-contrast block*, so here it flips to the
+ * off-white rather than the near-black. That keeps `bg-ink-black text-canvas`
+ * reading correctly as a selected state in both scopes.
+ */
+.on-dark {
+  --color-background: 20 3 5;
+  --color-surface: 32 11 14;
+  --color-surface-alt: 45 16 20;
+  --color-surface-inverse: 255 255 255;
+  --color-text: 244 239 237;
+  --color-muted: 173 160 157;
+  --color-subtle: 122 108 106;
+  --color-border: 58 34 38;
+  --color-black: 244 239 237;
+}

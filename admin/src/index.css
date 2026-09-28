@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Admin tokens. Kept separate from the storefront theme: the admin is a tool,
+ * not a shopfront, so it runs a calm neutral scale with the brand red used
+ * only for primary actions and active state.
+ */
+:root {
+  --admin-primary: 200 22 29; /* #C8161D — the HUMOVARE red */
+  --admin-primary-dark: 164 16 22;
+  --admin-primary-soft: 254 242 242;
+
+  --admin-canvas: 245 246 249; /* app background */
+  --admin-panel: 255 255 255; /* cards, tables */
+  --admin-sidebar: 17 19 24; /* near-black rail */
+
+  --admin-text: 17 24 39;
+  --admin-muted: 91 101 118;
+  --admin-subtle: 140 149 166;
+  --admin-border: 229 232 239;
+
+  --admin-success: 21 128 61;
+  --admin-warning: 180 83 9;
+  --admin-danger: 200 30 36;
+  --admin-info: 37 99 235;
+}
+
+@layer base {
+  * {
+    @apply border-line;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    font-size: 14px;
+    font-feature-settings: 'cv11', 'ss01';
+    /* A faint wash so the canvas is not a flat grey slab. */
+    background-image:
+      radial-gradient(60rem 30rem at 100% -10%, rgb(var(--admin-primary) / 0.035), transparent 60%),
+      radial-gradient(50rem 30rem at -10% 110%, rgb(var(--admin-info) / 0.03), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgb(var(--admin-primary) / 0.16);
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary/60 ring-offset-2 ring-offset-canvas;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.011em;
+  }
+
+  /* Tabular figures keep money and counts aligned down a column. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Tables across every screen: calm header, rows that respond to the cursor. */
+  table thead tr {
+    @apply border-b border-line;
+    background: rgb(var(--admin-canvas) / 0.6);
+  }
+  table thead th {
+    @apply text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-subtle;
+  }
+  table tbody tr {
+    transition: background-color 160ms ease;
+  }
+  table tbody tr:hover {
+    background: rgb(var(--admin-canvas) / 0.7);
+  }
+
+  /* Slim, quiet scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--admin-subtle) / 0.45) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+    background-color: rgb(var(--admin-subtle) / 0.4);
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--admin-subtle) / 0.7);
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-panel border border-line/80 bg-panel shadow-panel;
+    transition:
+      box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 240ms ease;
+  }
+
+  /* Opt-in lift for cards that are themselves a link or button. */
+  .panel-interactive:hover {
+    transform: translateY(-2px);
+    border-color: rgb(var(--admin-border));
+    box-shadow:
+      0 4px 6px -2px rgb(16 24 40 / 0.05),
+      0 12px 24px -8px rgb(16 24 40 / 0.12);
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-xs font-medium text-ink-muted;
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-line/70;
+  }
+  .skeleton::after {
+    @apply absolute inset-0;
+    content: '';
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0),
+      rgb(255 255 255 / 0.7),
+      rgb(255 255 255 / 0)
+    );
+    animation: shimmer 1.4s infinite;
+  }
+
+  /*
+   * Staggered entrance: direct children rise in one after another. Used on
+   * page bodies and card grids so a screen assembles rather than pops.
+   */
+  .stagger > * {
+    animation: page-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .stagger > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger > *:nth-child(2) { animation-delay: 50ms; }
+  .stagger > *:nth-child(3) { animation-delay: 100ms; }
+  .stagger > *:nth-child(4) { animation-delay: 150ms; }
+  .stagger > *:nth-child(5) { animation-delay: 200ms; }
+  .stagger > *:nth-child(6) { animation-delay: 250ms; }
+  .stagger > *:nth-child(n + 7) { animation-delay: 300ms; }
+
+  /* Sidebar nav item: the active marker slides in rather than snapping. */
+  .nav-item {
+    @apply relative flex items-center gap-3 rounded-lg px-3 py-2 text-[0.8125rem] font-medium;
+    transition:
+      background-color 180ms ease,
+      color 180ms ease,
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-item::before {
+    content: '';
+    @apply absolute left-0 top-1/2 h-5 w-[3px] rounded-r-full bg-primary;
+    transform: translateY(-50%) scaleY(0);
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-item[aria-current='page']::before {
+    transform: translateY(-50%) scaleY(1);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
