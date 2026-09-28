@@ -215,13 +215,13 @@ Static host (Vercel, Netlify, Cloudflare Pages, S3 + CloudFront).
 
 ```
 Build command:      npm run build
-Output directory:   shop/dist
+Output directory:   dist
 Install command:    npm install
 Node version:       18.18+
 ```
 
 `npm run build` builds both front ends and copies the admin build into
-`shop/dist/admin`, so a single static directory serves everything. The
+`dist/admin`, so a single static directory serves everything. The
 admin app is built with `base: '/admin/'`, and serving it from the storefront
 origin is what keeps the admin cookies same-site.
 
