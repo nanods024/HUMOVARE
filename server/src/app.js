@@ -76,6 +76,12 @@ export function createApp() {
     }),
   );
 
+  // Opening the bare API address (or a host's `HEAD /` probe) gets a short
+  // answer instead of a 404. Everything real lives under /api.
+  app.get('/', (_req, res) =>
+    sendSuccess(res, { message: 'HUMOVARE API', data: { status: 'ok', health: '/health', api: '/api' } }),
+  );
+
   // Admin traffic is mounted before the customer API and carries its own
   // authentication, CSRF and permission stack — see admin.routes.js.
   app.use('/api/admin', apiLimiter, adminRoutes);
