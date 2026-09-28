@@ -39,7 +39,17 @@ export function createApp() {
   );
 
   // The storefront and the admin portal are the only permitted origins.
-  const allowedOrigins = new Set([env.clientUrl, env.adminUrl, ...env.corsOrigins].filter(Boolean));
+  // An origin is scheme + host (+ port) with no path, so "https://shop.com/"
+  // typed into a setting must still match the browser's "https://shop.com".
+  const toOrigin = (value) => {
+    try {
+      return new URL(String(value).trim()).origin;
+    } catch {
+      return '';
+    }
+  };
+  const allowedOrigins = new Set([env.clientUrl, env.adminUrl, ...env.corsOrigins].map(toOrigin).filter(Boolean));
+  logger.info(`CORS allows: ${[...allowedOrigins].join(', ') || '(none)'}`);
 
   app.use(
     cors({
