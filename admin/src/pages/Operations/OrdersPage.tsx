@@ -79,12 +79,12 @@ export function OrdersPage() {
           <EmptyState icon={ShoppingCart} title="No orders match those filters" />
         ) : (
           <div className={cn(isPlaceholderData && 'opacity-60 transition-opacity')}>
-            {/* Phones: one card per order, so nothing needs sideways scrolling. */}
-            <ul className="divide-y divide-line md:hidden">
+            {/* Phones and tablets: one card per order, so nothing needs sideways scrolling. */}
+            <ul className="grid divide-y divide-line sm:grid-cols-2 sm:gap-px sm:divide-y-0 sm:bg-line xl:hidden">
               {orders.map((order) => {
                 const payment = paymentStatusView(order.paymentStatus);
                 return (
-                  <li key={order._id} className="px-4 py-3.5">
+                  <li key={order._id} className="flex flex-col bg-panel px-4 py-3.5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <Link to={`/orders/${order._id}`} className="break-all text-sm font-semibold text-ink hover:text-primary">
@@ -108,7 +108,7 @@ export function OrdersPage() {
                       </span>
                     </div>
 
-                    <div className="mt-3 flex items-center gap-2">
+                    <div className="mt-auto flex items-center gap-2 pt-3">
                       <Link
                         to={`/orders/${order._id}`}
                         className="rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink hover:border-primary hover:text-primary"
@@ -131,8 +131,8 @@ export function OrdersPage() {
               })}
             </ul>
 
-            <div className="hidden overflow-x-auto md:block">
-            <table className="w-full min-w-[48rem] text-sm">
+            <div className="relative hidden overflow-x-auto xl:block">
+            <table className="w-full min-w-[42rem] text-sm">
               <thead>
                 <tr className="border-b border-line bg-canvas/50 text-left text-xs text-ink-muted">
                   <th scope="col" className="px-5 py-2.5 font-medium">Order</th>
@@ -152,7 +152,7 @@ export function OrdersPage() {
                 {orders.map((order) => (
                   <tr key={order._id} className="hover:bg-canvas/60">
                     <td className="px-5 py-3">
-                      <Link to={`/orders/${order._id}`} className="font-medium text-ink hover:text-primary">
+                      <Link to={`/orders/${order._id}`} className="whitespace-nowrap font-medium text-ink hover:text-primary">
                         {order.orderNumber}
                       </Link>
                       <p className="text-xs text-ink-subtle">{formatDate(order.createdAt)}</p>
