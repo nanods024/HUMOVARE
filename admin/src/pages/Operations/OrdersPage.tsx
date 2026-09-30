@@ -48,8 +48,8 @@ export function OrdersPage() {
       />
 
       <Panel>
-        <div className="flex flex-wrap items-center gap-3 border-b border-line px-5 py-3">
-          <div className="relative min-w-[14rem] flex-1">
+        <div className="flex flex-col gap-3 border-b border-line px-4 py-3 sm:flex-row sm:items-center sm:px-5">
+          <div className="relative min-w-0 flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-subtle" aria-hidden="true" />
             <Input
               value={searchInput}
@@ -64,7 +64,7 @@ export function OrdersPage() {
             value={params.status ?? ''}
             onChange={(event) => setParam('status', event.target.value || undefined)}
             aria-label="Filter by status"
-            className="w-44"
+            className="w-full sm:w-44"
           >
             <option value="">All statuses</option>
             {Object.keys(TRANSITIONS).map((status) => (
@@ -78,7 +78,60 @@ export function OrdersPage() {
         ) : orders.length === 0 ? (
           <EmptyState icon={ShoppingCart} title="No orders match those filters" />
         ) : (
-          <div className={cn('overflow-x-auto', isPlaceholderData && 'opacity-60 transition-opacity')}>
+          <div className={cn(isPlaceholderData && 'opacity-60 transition-opacity')}>
+            {/* Phones: one card per order, so nothing needs sideways scrolling. */}
+            <ul className="divide-y divide-line md:hidden">
+              {orders.map((order) => {
+                const payment = paymentStatusView(order.paymentStatus);
+                return (
+                  <li key={order._id} className="px-4 py-3.5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <Link to={`/orders/${order._id}`} className="break-all text-sm font-semibold text-ink hover:text-primary">
+                          {order.orderNumber}
+                        </Link>
+                        <p className="text-xs text-ink-subtle">{formatDate(order.createdAt)}</p>
+                      </div>
+                      <p className="tabular shrink-0 text-sm font-semibold text-ink">{formatPrice(order.total)}</p>
+                    </div>
+
+                    <p className="mt-2 truncate text-sm text-ink">{order.shippingAddress?.name}</p>
+                    <p className="truncate text-xs text-ink-subtle">{order.user?.email ?? 'Account deleted'}</p>
+
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                      <OrderStatusBadge status={order.orderStatus} />
+                      <Badge tone={payment.tone}>
+                        {order.paymentMethod === 'ONLINE' ? 'PhonePe' : 'COD'} · {payment.label}
+                      </Badge>
+                      <span className="text-xs text-ink-muted">
+                        {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex items-center gap-2">
+                      <Link
+                        to={`/orders/${order._id}`}
+                        className="rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink hover:border-primary hover:text-primary"
+                      >
+                        View order
+                      </Link>
+                      {canDelete && (
+                        <button
+                          type="button"
+                          onClick={() => setDeleting(order)}
+                          aria-label={`Delete order ${order.orderNumber}`}
+                          className="ml-auto rounded-md p-1.5 text-ink-muted transition-colors hover:bg-danger/10 hover:text-danger"
+                        >
+                          <Trash2 className="h-4 w-4" aria-hidden="true" />
+                        </button>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[48rem] text-sm">
               <thead>
                 <tr className="border-b border-line bg-canvas/50 text-left text-xs text-ink-muted">
@@ -133,6 +186,7 @@ export function OrdersPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         )}
 
