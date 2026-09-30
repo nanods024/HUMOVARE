@@ -10,6 +10,17 @@ window.addEventListener('pageshow', (event) => {
   if (event.persisted) window.location.reload();
 });
 
+// Installable app support. The worker caches nothing (see public/sw.js), so
+// it cannot keep admin data on the device; it only makes the portal eligible
+// for "Install app".
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL })
+      .catch(() => {});
+  });
+}
+
 const container = document.getElementById('root');
 if (!container) throw new Error('Root element #root was not found');
 
