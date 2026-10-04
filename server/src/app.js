@@ -48,7 +48,25 @@ export function createApp() {
       return '';
     }
   };
-  const allowedOrigins = new Set([env.clientUrl, env.adminUrl, ...env.corsOrigins].map(toOrigin).filter(Boolean));
+  // "shop.com" and "www.shop.com" are the same site to whoever owns it, and
+  // the DNS host usually redirects one to the other. Browsers hide "www." in
+  // the address bar, so the one typed into a setting is often not the one the
+  // site is actually served from. Accept both.
+  const withTwin = (origin) => {
+    const url = new URL(origin);
+    if (url.hostname === 'localhost' || /^[\d.]+$|:/.test(url.hostname)) return [origin];
+    const twin = new URL(origin);
+    twin.hostname = url.hostname.startsWith('www.') ? url.hostname.slice(4) : `www.${url.hostname}`;
+    return [origin, twin.origin];
+  };
+  // FRONTEND_URL and ADMIN_PUBLIC_URL name the public site for emails, so
+  // they are permitted origins by definition.
+  const allowedOrigins = new Set(
+    [env.clientUrl, env.adminUrl, env.frontendUrl, env.adminPublicUrl, ...env.corsOrigins]
+      .map(toOrigin)
+      .filter(Boolean)
+      .flatMap(withTwin),
+  );
   logger.info(`CORS allows: ${[...allowedOrigins].join(', ') || '(none)'}`);
 
   app.use(

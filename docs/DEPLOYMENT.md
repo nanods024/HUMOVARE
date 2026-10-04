@@ -180,10 +180,17 @@ balancer, which breaks rate limiting and secure-cookie detection.
 
 ### CORS
 
-`CLIENT_URL` and `ADMIN_URL` are the allowed origins, plus anything listed in
-`CORS_ORIGINS`. Credentials are enabled, so the wildcard is not merely
-discouraged — the browser rejects `Access-Control-Allow-Origin: *` on a
-credentialed request. Set these to the exact production origins.
+`CLIENT_URL`, `ADMIN_URL`, `FRONTEND_URL` and `ADMIN_PUBLIC_URL` are the
+allowed origins, plus anything listed in `CORS_ORIGINS`. Each is also allowed
+with and without `www.`, because the domain usually redirects one to the other
+and Chrome hides `www.` in the address bar. Credentials are enabled, so the
+wildcard is not merely discouraged — the browser rejects
+`Access-Control-Allow-Origin: *` on a credentialed request. Set these to the
+exact production origins.
+
+If sign-in fails with *"This origin is not allowed"*, the site's origin is
+missing from these settings. The API logs the full list at boot
+(`CORS allows: …`).
 
 ### Cookies across subdomains
 
