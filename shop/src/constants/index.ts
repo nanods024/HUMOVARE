@@ -114,4 +114,4 @@ export const STORAGE_KEYS = {
   recentlyViewed: 'humovare.recent.v1',
 } as const;
 
-export const SITE_URL = import.meta.env.VITE_SITE_URL || 'http://localhost:5173';
+export const SITE_URL = import.meta.env.VITE_SITE_URL || (import.meta.env.PROD ? 'https://humovare.in' : 'http://localhost:5173');

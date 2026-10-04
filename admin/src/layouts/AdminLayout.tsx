@@ -73,7 +73,7 @@ const NAV: NavGroup[] = [
   },
 ];
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'http://localhost:5173';
+const SITE_URL = import.meta.env.VITE_SITE_URL || (import.meta.env.PROD ? 'https://humovare.in' : 'http://localhost:5173');
 
 const initialsOf = (name = '') =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'A';

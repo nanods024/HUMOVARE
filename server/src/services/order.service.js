@@ -12,7 +12,7 @@ import { parsePagination, buildPaginationMeta } from '../utils/pagination.js';
 import * as cartService from './cart.service.js';
 import { reserveStock, releaseStock, releaseOrderStock } from './stock.js';
 import {
-  isOnlinePaymentAvailable,
+  isOnlineCheckoutOpen,
   startAttempt,
   prepareCustomerCancel,
 } from './payments/onlinePayment.service.js';
@@ -98,7 +98,7 @@ export async function createOrder(userId, payload) {
   const isOnline = payload.paymentMethod === PAYMENT_METHODS.ONLINE;
   // Checked before anything is reserved: never take stock for a payment
   // this server cannot collect.
-  if (isOnline && !isOnlinePaymentAvailable()) {
+  if (isOnline && !isOnlineCheckoutOpen()) {
     throw ApiError.badRequest('Online payment is not available right now. Please choose Cash on Delivery.');
   }
 

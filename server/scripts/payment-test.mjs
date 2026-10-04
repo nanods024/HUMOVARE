@@ -212,6 +212,21 @@ check('PhonePe is offered when configured', online?.enabled === true && online?.
 check('checkout is told it is sandbox', online?.testMode === true);
 check('payment methods reveal no credentials', !JSON.stringify(methods.json).includes(CLIENT_ID) && !JSON.stringify(methods.json).includes(CLIENT_SECRET));
 
+// ── Online payment switch in Settings ────────────────────────────────────────
+console.log('\n── Online payment switch ──');
+const settingsView = await adminApi('GET', '/settings');
+check('settings report PhonePe as configured', settingsView.json.data?.paymentGateway?.configured === true && settingsView.json.data?.paymentGateway?.testMode === true);
+check('online payment is on by default', settingsView.json.data?.settings?.shipping?.onlineEnabled === true);
+check('settings reveal no PhonePe credentials', !JSON.stringify(settingsView.json).includes(CLIENT_ID) && !JSON.stringify(settingsView.json).includes(CLIENT_SECRET));
+await adminApi('PUT', '/settings', { shipping: { onlineEnabled: false } });
+const offMethods = await api('GET', '/api/orders/payment-methods');
+check('switched off → checkout shows online payment unavailable', offMethods.json.data.methods.find((m) => m.method === 'ONLINE')?.enabled === false);
+const offOrder = await api('POST', '/api/orders', { shippingAddress: address, paymentMethod: 'ONLINE' }, token);
+check('switched off → an online order is refused', offOrder.status === 400 && /not available/i.test(offOrder.json.message ?? ''));
+check('switching it off leaves the other shipping settings alone', (await adminApi('GET', '/settings')).json.data?.settings?.shipping?.codEnabled === true);
+await adminApi('PUT', '/settings', { shipping: { onlineEnabled: true } });
+check('switched back on → offered again', (await api('GET', '/api/orders/payment-methods')).json.data.methods.find((m) => m.method === 'ONLINE')?.enabled === true);
+
 // ── 1. Successful payment ────────────────────────────────────────────────────
 console.log('\n── 1. Successful payment ──');
 const stockBefore = await variantStock();

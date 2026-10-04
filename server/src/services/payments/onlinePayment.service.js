@@ -5,6 +5,7 @@ import { PaymentEvent } from '../../models/PaymentEvent.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { logger } from '../../utils/logger.js';
 import { releaseOrderStock } from '../stock.js';
+import { storeSettings } from '../storeSettings.service.js';
 import {
   notifyOrderConfirmed,
   notifyPaymentSucceeded,
@@ -67,12 +68,22 @@ export function isOnlinePaymentAvailable() {
   return true;
 }
 
+/**
+ * Whether checkout may take NEW online orders: PhonePe is configured and the
+ * store has not switched online payment off in Settings. Orders already
+ * waiting for a payment keep using isOnlinePaymentAvailable, so switching it
+ * off never strands a customer mid-payment or stops verification.
+ */
+export function isOnlineCheckoutOpen() {
+  return isOnlinePaymentAvailable() && storeSettings().shipping.onlineEnabled !== false;
+}
+
 export function onlineMethodInfo() {
   return {
     method: PAYMENT_METHODS.ONLINE,
     label: 'PhonePe — UPI, cards, net banking',
-    enabled: isOnlinePaymentAvailable(),
-    provider: isOnlinePaymentAvailable() ? PROVIDER : null,
+    enabled: isOnlineCheckoutOpen(),
+    provider: isOnlineCheckoutOpen() ? PROVIDER : null,
     // A sandbox payment moves no real money; the checkout says so.
     testMode: env.phonepe.env === 'sandbox',
   };

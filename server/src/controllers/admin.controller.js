@@ -766,9 +766,20 @@ export const getAuditLogs = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * What the Settings page needs to know about PhonePe on this server, so the
+ * online-payment switch can say whether turning it on will actually work.
+ * Never includes credentials.
+ */
+const paymentGateway = () => ({
+  provider: 'PhonePe',
+  configured: onlinePayment.isOnlinePaymentAvailable(),
+  testMode: env.phonepe.env === 'sandbox',
+});
+
 export const getSettings = asyncHandler(async (_req, res) => {
   const settings = await adminOps.getSettings();
-  return sendSuccess(res, { message: 'Settings fetched', data: { settings } });
+  return sendSuccess(res, { message: 'Settings fetched', data: { settings, paymentGateway: paymentGateway() } });
 });
 
 export const updateSettings = asyncHandler(async (req, res) => {
@@ -783,7 +794,7 @@ export const updateSettings = asyncHandler(async (req, res) => {
     metadata: { fields: Object.keys(req.body) },
   });
 
-  return sendSuccess(res, { message: 'Settings saved', data: { settings: after } });
+  return sendSuccess(res, { message: 'Settings saved', data: { settings: after, paymentGateway: paymentGateway() } });
 });
 
 // ── Feedback ─────────────────────────────────────────────────────────────────

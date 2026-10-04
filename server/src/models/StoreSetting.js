@@ -39,6 +39,10 @@ const storeSettingSchema = new mongoose.Schema(
       dispatchDays: { type: Number, min: 0, default: 2 },
       deliveryEstimateDays: { type: Number, min: 1, default: 6 },
       codEnabled: { type: Boolean, default: true },
+      // Online payment (PhonePe) at checkout. Only offered while PhonePe is
+      // also configured on the server; switching it off never touches orders
+      // already waiting for a payment.
+      onlineEnabled: { type: Boolean, default: true },
       codMaxOrderValue: { type: Number, min: 0, default: 10000 },
       // Cash on Delivery only for deliveries to one city (Visakhapatnam by
       // default); everywhere else pays online.

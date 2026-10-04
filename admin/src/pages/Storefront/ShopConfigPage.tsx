@@ -13,7 +13,7 @@ import {
   PageHeader, Panel, Button, Input, Textarea, Select, Checkbox, Skeleton, ErrorState,
 } from '@/components/ui';
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'http://localhost:5173';
+const SITE_URL = import.meta.env.VITE_SITE_URL || (import.meta.env.PROD ? 'https://humovare.in' : 'http://localhost:5173');
 
 /**
  * Shop page configuration.

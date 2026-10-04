@@ -434,6 +434,15 @@ export interface AuditLogEntry {
   createdAt: string;
 }
 
+/** PhonePe on this server, as the Settings page sees it. Never credentials. */
+export interface PaymentGatewayStatus {
+  provider: string;
+  /** Keys are set, so online payment can actually be taken. */
+  configured: boolean;
+  /** Sandbox keys: no real money moves. */
+  testMode: boolean;
+}
+
 export interface StoreSettings {
   _id: string;
   storeName: string;
@@ -460,6 +469,8 @@ export interface StoreSettings {
     dispatchDays: number;
     deliveryEstimateDays: number;
     codEnabled: boolean;
+    /** Online payment (PhonePe) at checkout. Older documents may not have it yet. */
+    onlineEnabled?: boolean;
     codMaxOrderValue: number;
     /** COD only for deliveries to codCity. Older documents may not have these yet. */
     codCityOnly?: boolean;

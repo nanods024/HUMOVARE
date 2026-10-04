@@ -412,6 +412,7 @@ export const updateSettingsSchema = {
           dispatchDays: z.coerce.number().int().min(0).optional(),
           deliveryEstimateDays: z.coerce.number().int().min(1).optional(),
           codEnabled: z.boolean().optional(),
+          onlineEnabled: z.boolean().optional(),
           codMaxOrderValue: z.coerce.number().min(0).optional(),
           codCityOnly: z.boolean().optional(),
           codCity: z.string().trim().max(80).optional(),

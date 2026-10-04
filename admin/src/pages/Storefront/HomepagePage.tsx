@@ -16,7 +16,7 @@ import {
 import { SectionEditor } from './SectionEditor';
 import { PAGE_SIZE, usePagedList } from '@/lib/pagination';
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'http://localhost:5173';
+const SITE_URL = import.meta.env.VITE_SITE_URL || (import.meta.env.PROD ? 'https://humovare.in' : 'http://localhost:5173');
 
 const STATUS_TONES: Record<ContentStatus, 'success' | 'neutral' | 'info' | 'warning'> = {
   published: 'success',

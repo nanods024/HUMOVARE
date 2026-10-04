@@ -29,6 +29,7 @@ export const DEFAULTS = Object.freeze({
     dispatchDays: 2,
     deliveryEstimateDays: 6,
     codEnabled: true,
+    onlineEnabled: true,
     codMaxOrderValue: 10000,
     codCityOnly: true,
     codCity: 'Visakhapatnam',

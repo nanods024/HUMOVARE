@@ -155,9 +155,9 @@ PORT=5000
 MONGODB_URI=mongodb+srv://...
 JWT_ACCESS_SECRET=...
 JWT_REFRESH_SECRET=...
-CLIENT_URL=https://humovare.com
-CORS_ORIGINS=https://www.humovare.com
-COOKIE_DOMAIN=.humovare.com
+CLIENT_URL=https://humovare.in
+CORS_ORIGINS=https://www.humovare.in
+COOKIE_DOMAIN=.humovare.in
 CLOUDINARY_CLOUD_NAME=...
 CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
@@ -197,9 +197,9 @@ missing from these settings. The API logs the full list at boot
 In production the refresh cookie is `Secure`, `SameSite=None`, `HttpOnly`,
 scoped to `/api/auth`. That combination **requires HTTPS on both origins**.
 
-- Same domain (`humovare.com` + `humovare.com/api`) — leave `COOKIE_DOMAIN`
+- Same domain (`humovare.in` + `humovare.in/api`) — leave `COOKIE_DOMAIN`
   blank; simplest and most robust.
-- Split subdomains (`www.` + `api.`) — set `COOKIE_DOMAIN=.humovare.com` and
+- Split subdomains (`www.` + `api.`) — set `COOKIE_DOMAIN=.humovare.in` and
   list every storefront origin in `CORS_ORIGINS`.
 - Different registrable domains — the refresh cookie will be treated as
   third-party and dropped by most browsers. Put the API behind a path on the
@@ -239,7 +239,7 @@ Two routing rules are needed on top of the storefront's:
 /admin/*      →  /admin/index.html  200 (SPA fallback, before the storefront's)
 ```
 
-Without the first, `https://humovare.com/admin` misses the directory index.
+Without the first, `https://humovare.in/admin` misses the directory index.
 Without the second — and without it being matched *before* the storefront's
 own `/*` catch-all — a refresh on `/admin/products` renders the shop's 404.
 
@@ -257,8 +257,8 @@ URL you will use in production.
 Environment:
 
 ```bash
-VITE_API_URL=https://api.humovare.com/api
-VITE_SITE_URL=https://humovare.com
+VITE_API_URL=https://api.humovare.in/api
+VITE_SITE_URL=https://humovare.in
 VITE_CLOUDINARY_CLOUD_NAME=your-cloud
 ```
 

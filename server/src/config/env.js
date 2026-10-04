@@ -25,6 +25,20 @@ const list = (value) =>
     .map((item) => item.trim())
     .filter(Boolean);
 
+/** The live site. Production links fall back to it when nothing else is set. */
+const PUBLIC_SITE_URL = 'https://humovare.in';
+const isProduction = process.env.NODE_ENV === 'production';
+
+/**
+ * Where links in emails point. Separate from CLIENT_URL (which drives CORS)
+ * because the two differ in staging, and a reset link must always land on
+ * the public storefront rather than on whatever origin made the request.
+ */
+const frontendUrl = (
+  process.env.FRONTEND_URL
+  || (isProduction ? PUBLIC_SITE_URL : process.env.CLIENT_URL || 'http://localhost:5173')
+).replace(/\/+$/, '');
+
 export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   get isProd() {
@@ -35,13 +49,8 @@ export const env = {
   },
   port: num(process.env.PORT, 5000),
 
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
-  /**
-   * Where links in emails point. Separate from CLIENT_URL (which drives CORS)
-   * because the two differ in staging, and a reset link must always land on
-   * the public storefront rather than on whatever origin made the request.
-   */
-  frontendUrl: (process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/+$/, ''),
+  clientUrl: process.env.CLIENT_URL || (isProduction ? PUBLIC_SITE_URL : 'http://localhost:5173'),
+  frontendUrl,
   adminUrl: process.env.ADMIN_URL || 'http://localhost:5174',
   corsOrigins: list(process.env.CORS_ORIGINS),
 
@@ -104,10 +113,7 @@ export const env = {
   },
 
   /** Where the admin app is served, for links in admin emails. */
-  adminPublicUrl: (
-    process.env.ADMIN_PUBLIC_URL
-    || `${(process.env.FRONTEND_URL || process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/+$/, '')}/admin`
-  ).replace(/\/+$/, ''),
+  adminPublicUrl: (process.env.ADMIN_PUBLIC_URL || `${frontendUrl}/admin`).replace(/\/+$/, ''),
 
   cookie: {
     domain: process.env.COOKIE_DOMAIN || undefined,

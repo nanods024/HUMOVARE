@@ -22,6 +22,7 @@ import type {
   Role,
   ShopConfig,
   StoreSettings,
+  PaymentGatewayStatus,
 } from '@/types';
 
 type Paged<K extends string, T> = { [P in K]: T[] } & { pagination: Pagination };
@@ -227,8 +228,8 @@ export const auditApi = {
 };
 
 export const settingsApi = {
-  get: () => api.get<{ settings: StoreSettings }>('/settings'),
-  update: (payload: unknown) => api.put<{ settings: StoreSettings }>('/settings', payload),
+  get: () => api.get<{ settings: StoreSettings; paymentGateway?: PaymentGatewayStatus }>('/settings'),
+  update: (payload: unknown) => api.put<{ settings: StoreSettings; paymentGateway?: PaymentGatewayStatus }>('/settings', payload),
 };
 
 export interface BlockedNetwork {

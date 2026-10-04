@@ -14,7 +14,7 @@ import {
 } from '@/components/ui';
 import { PAGE_SIZE, usePagedList } from '@/lib/pagination';
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'http://localhost:5173';
+const SITE_URL = import.meta.env.VITE_SITE_URL || (import.meta.env.PROD ? 'https://humovare.in' : 'http://localhost:5173');
 
 interface Post {
   id?: string;
