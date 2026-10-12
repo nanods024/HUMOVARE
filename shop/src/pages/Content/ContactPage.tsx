@@ -24,7 +24,7 @@ export function ContactPage() {
   const { brand: BRAND } = useStoreSettings();
   useSeo({
     title: 'Contact us',
-    description: 'Questions about an order, a size or a return? Talk to the HUMOVARE team.',
+    description: `Questions about an order, a size or a return? Talk to ${BRAND.contactName}.`,
     canonicalPath: '/contact',
   });
 
@@ -82,8 +82,13 @@ export function ContactPage() {
       <header className="my-6 md:my-10">
         <h1 className="text-display-md">Talk to us</h1>
         <p className="mt-3 max-w-prose text-sm text-ink-muted">
-          Sizing, an order that has gone quiet, a return — whatever it is, a real person will read
-          this and reply.
+          Sizing, an order that has gone quiet, a return — whatever it is, {BRAND.contactName} will
+          read this and reply.
+        </p>
+        <p className="mt-2 text-sm text-ink-muted">
+          Owner: <span className="font-medium text-ink">{BRAND.ownerName}</span>
+          <span className="mx-2 text-ink-subtle">•</span>
+          Contact: <span className="font-medium text-ink">{BRAND.contactName}</span>
         </p>
       </header>
 

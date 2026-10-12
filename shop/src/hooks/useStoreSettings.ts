@@ -12,6 +12,8 @@ import { formatPrice } from '@/utils/format';
 const FALLBACK: PublicStoreSettings = {
   storeName: BRAND.name,
   tagline: BRAND.tagline,
+  ownerName: BRAND.ownerName,
+  contactName: BRAND.contactName,
   email: BRAND.email,
   phone: BRAND.phone,
   whatsapp: BRAND.whatsapp,
@@ -48,6 +50,8 @@ export function useStoreSettings() {
     brand: {
       name: pick(s.storeName, FALLBACK.storeName),
       tagline: pick(s.tagline, FALLBACK.tagline),
+      ownerName: pick(s.ownerName ?? '', FALLBACK.ownerName ?? BRAND.ownerName),
+      contactName: pick(s.contactName ?? '', FALLBACK.contactName ?? BRAND.contactName),
       email,
       phone,
       /** Digits only, for tel: links. */

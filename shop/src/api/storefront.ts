@@ -60,6 +60,8 @@ export interface PublicShopConfig {
 export interface PublicStoreSettings {
   storeName: string;
   tagline: string;
+  ownerName?: string;
+  contactName?: string;
   email: string;
   phone: string;
   whatsapp: string;

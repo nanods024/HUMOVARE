@@ -3,6 +3,8 @@
 export const BRAND = {
   name: 'HUMOVARE',
   tagline: 'Not just clothing. A movement.',
+  ownerName: 'BOTCHA PRAKASH',
+  contactName: 'BOTCHA PRAKASH',
   email: 'hello@humovare.in',
   phone: '+91 79893 55385',
   phoneRaw: '917989355385',

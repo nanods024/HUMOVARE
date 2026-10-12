@@ -69,6 +69,10 @@ export function Footer() {
           </p>
 
           <address className="mt-5 text-xs not-italic leading-relaxed text-ink-subtle">
+            <span className="block text-[0.625rem] uppercase tracking-[0.12em] text-ink-subtle">Owner</span>
+            <span className="block font-medium text-ink">{BRAND.ownerName}</span>
+            <span className="mt-2 block text-[0.625rem] uppercase tracking-[0.12em] text-ink-subtle">Contact</span>
+            <span className="block font-medium text-ink">{BRAND.contactName}</span>
             {BRAND.address.line1}
             <br />
             {BRAND.address.line2}
