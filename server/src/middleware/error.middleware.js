@@ -70,6 +70,10 @@ export function errorHandler(err, req, res, _next) {
   const safeDetails = err instanceof ApiError ? err.details : undefined;
   if (safeDetails?.retryAfterSeconds) res.set('Retry-After', String(safeDetails.retryAfterSeconds));
 
+  // A public route may already have marked the response CDN-cacheable; a
+  // failure must never be cached in its place.
+  res.set('Cache-Control', 'no-store');
+
   // Unexpected failures are masked in production. A deliberate ApiError
   // (a payment gateway outage, uploads not configured) keeps its written,
   // customer-safe message.

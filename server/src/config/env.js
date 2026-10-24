@@ -241,6 +241,12 @@ export const env = {
     max: num(process.env.RATE_LIMIT_MAX, 300),
   },
 
+  /**
+   * Seconds a CDN may serve a public catalogue response without asking the
+   * API (see cacheControl.middleware.js). 0 turns CDN caching off.
+   */
+  cdnCacheSeconds: Math.max(0, num(process.env.CDN_CACHE_SECONDS, 60)),
+
   /** Proxy hops to trust: false, or a count (true means 1). */
   trustProxy: (() => {
     const raw = (process.env.TRUST_PROXY ?? '').trim().toLowerCase();

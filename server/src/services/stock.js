@@ -1,4 +1,15 @@
 import { Product } from '../models/Product.js';
+import { forgetPublicCache, productCacheKey } from '../utils/publicCache.js';
+
+/**
+ * A product page shows stock per size, so its cached copy goes the moment
+ * stock moves. Listings keep their short cache; the cart and checkout
+ * re-check stock regardless.
+ */
+function stockChanged(product) {
+  if (!product?.slug) return;
+  forgetPublicCache(productCacheKey(product.slug));
+}
 
 /**
  * Atomically reserves stock for one line.
@@ -9,7 +20,7 @@ import { Product } from '../models/Product.js';
  * which `session.withTransaction` would have required.
  */
 export async function reserveStock(productId, variantId, quantity) {
-  return Product.findOneAndUpdate(
+  const product = await Product.findOneAndUpdate(
     {
       _id: productId,
       isActive: true,
@@ -18,13 +29,17 @@ export async function reserveStock(productId, variantId, quantity) {
     { $inc: { 'variants.$.stock': -quantity, stock: -quantity, soldCount: quantity } },
     { new: true },
   );
+  stockChanged(product);
+  return product;
 }
 
 export async function releaseStock(productId, variantId, quantity) {
-  await Product.updateOne(
+  const product = await Product.findOneAndUpdate(
     { _id: productId, 'variants._id': variantId },
     { $inc: { 'variants.$.stock': quantity, stock: quantity, soldCount: -quantity } },
-  );
+    { projection: { slug: 1 } },
+  ).lean();
+  stockChanged(product);
 }
 
 /** Puts every line of an order back on the shelf. Never throws. */

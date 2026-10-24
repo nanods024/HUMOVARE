@@ -42,4 +42,12 @@ export function clearPublicCache() {
   store.clear();
 }
 
-export default { cached, clearPublicCache, TTL };
+/** Drops one entry, e.g. a product page whose stock just moved. */
+export function forgetPublicCache(key) {
+  store.delete(key);
+}
+
+/** Key of a cached product page — shared by the controller and stock writes. */
+export const productCacheKey = (slug) => `product:${slug}`;
+
+export default { cached, clearPublicCache, forgetPublicCache, productCacheKey, TTL };
