@@ -97,7 +97,8 @@ export const homepageSections = [
     eyebrow: 'Our story',
     title: 'Not just clothes.',
     highlight: 'A way to move.',
-    image: image('humovare-story-01', 1000, 1250, 'HUMOVARE editorial'),
+    // No stored image: the storefront falls back to /our_story-1400.jpg.
+    image: null,
     items: [
       {
         text: 'HUMOVARE started with a straightforward complaint: most everyday clothing gives up early. The shoulder drops, the neck waves out, the black fades to grey — and a piece you liked becomes one you keep out of habit.',

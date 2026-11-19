@@ -15,15 +15,21 @@ export function AboutPage() {
 
   return (
     <>
-      <div className="relative flex min-h-[46svh] items-end overflow-hidden bg-canvas">
+      {/* The photo keeps its own shape, so nothing is cropped. On wider screens
+          the headline sits over its darkened bottom; on phones, below it. */}
+      <div className="relative overflow-hidden bg-black">
         <img
-          src="https://picsum.photos/seed/humovare-about-hero/1920/1000"
+          src="/our_story-1400.jpg"
+          srcSet="/our_story-1400.jpg 1400w, /our_story-2000.jpg 2000w"
+          sizes="100vw"
+          width={1400}
+          height={788}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-60"
+          className="block h-auto w-full"
         />
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/85 to-black/20" />
+        <div aria-hidden="true" className="absolute inset-0 hidden bg-gradient-to-t from-black/85 via-black/20 to-transparent md:block" />
 
-        <div className="container-page relative pb-12 pt-24">
+        <div className="container-page relative py-10 md:absolute md:inset-x-0 md:bottom-0 md:pb-12 md:pt-0">
           <h1 className="text-display-lg text-white">
             Not just clothing.
             <br />

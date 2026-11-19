@@ -41,8 +41,25 @@ export function ProductGrid({
   );
 }
 
-/** Horizontally scrolling rail used by the homepage sections on mobile. */
-export function ProductRail({ products, isLoading }: { products: ProductCardData[]; isLoading?: boolean }) {
+/** How many products the phone mosaic shows: two full big-then-pair runs. */
+const MOSAIC_COUNT = 6;
+
+/**
+ * Product row used by the homepage sections and Recently Viewed.
+ *
+ * On phones it is either a snapping sideways rail (`rail`) or a mosaic
+ * (`mosaic`): one full-width product, then two side by side, repeating.
+ * Tablet and desktop always get the plain grid.
+ */
+export function ProductRail({
+  products,
+  isLoading,
+  mobileLayout = 'rail',
+}: {
+  products: ProductCardData[];
+  isLoading?: boolean;
+  mobileLayout?: 'rail' | 'mosaic';
+}) {
   if (isLoading) {
     return <ProductGridSkeleton count={4} />;
   }
@@ -50,14 +67,32 @@ export function ProductRail({ products, isLoading }: { products: ProductCardData
 
   return (
     <>
-      {/* Mobile: a snapping rail keeps four products reachable with a thumb. */}
-      <div className="scroll-rail -mx-gutter gap-4 px-gutter pb-2 md:hidden">
-        {products.map((product) => (
-          <div key={product._id} className="w-[46%] shrink-0 snap-start">
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
+      {mobileLayout === 'mosaic' ? (
+        <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:hidden">
+          {products.slice(0, MOSAIC_COUNT).map((product, index) => {
+            // Every third card, starting with the first, takes the full row.
+            const isWide = index % 3 === 0;
+            return (
+              <ProductCard
+                key={product._id}
+                product={product}
+                priority={index === 0}
+                sizes={isWide ? '100vw' : '50vw'}
+                className={isWide ? 'col-span-2' : undefined}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        /* A snapping rail keeps four products reachable with a thumb. */
+        <div className="scroll-rail -mx-gutter gap-4 px-gutter pb-2 md:hidden">
+          {products.map((product) => (
+            <div key={product._id} className="w-[46%] shrink-0 snap-start">
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="hidden grid-cols-3 gap-x-4 gap-y-10 md:grid xl:grid-cols-4">
         {products.slice(0, 8).map((product, index) => (

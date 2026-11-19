@@ -132,7 +132,7 @@ function renderSection(section: HomepageSectionData, previous?: HomepageSectionD
             description={section.description}
             link={toLink(section.link)}
           />
-          <ProductRail products={section.products ?? []} />
+          <ProductRail products={section.products ?? []} mobileLayout="mosaic" />
         </>
       );
 
@@ -318,7 +318,7 @@ export function HomePage() {
           description="The latest pieces to come out of the studio."
           link={{ label: 'All new drops', to: '/new-drops' }}
         />
-        <ProductRail products={feed.data?.newDrops ?? []} isLoading={isPending || feed.isLoading} />
+        <ProductRail products={feed.data?.newDrops ?? []} isLoading={isPending || feed.isLoading} mobileLayout="mosaic" />
       </Reveal>
 
       <section className="bg-surface py-16 md:py-24">
@@ -329,7 +329,7 @@ export function HomePage() {
             description="The pieces our community keeps coming back for."
             link={{ label: 'All bestsellers', to: '/bestsellers' }}
           />
-          <ProductRail products={feed.data?.bestsellers ?? []} isLoading={isPending || feed.isLoading} />
+          <ProductRail products={feed.data?.bestsellers ?? []} isLoading={isPending || feed.isLoading} mobileLayout="mosaic" />
         </Reveal>
       </section>
 

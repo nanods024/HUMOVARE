@@ -17,6 +17,8 @@ interface ProductCardProps {
   /** First row of the first page should not lazy-load. */
   priority?: boolean;
   className?: string;
+  /** Image `sizes` hint; override when the card is wider than a grid cell. */
+  sizes?: string;
 }
 
 /**
@@ -30,6 +32,7 @@ export const ProductCard = memo(function ProductCard({
   product,
   priority = false,
   className,
+  sizes = GRID_SIZES,
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const canHover = useCanHover();
@@ -62,7 +65,7 @@ export const ProductCard = memo(function ProductCard({
               image={primary}
               alt={product.name}
               aspect={5 / 4}
-              sizes={GRID_SIZES}
+              sizes={sizes}
               priority={priority}
               wrapperClassName={cn(
                 'absolute inset-0 transition-opacity duration-slow ease-brand',
@@ -79,7 +82,7 @@ export const ProductCard = memo(function ProductCard({
                 image={secondary}
                 alt=""
                 aspect={5 / 4}
-                sizes={GRID_SIZES}
+                sizes={sizes}
                 wrapperClassName={cn(
                   'absolute inset-0 transition-opacity duration-slow ease-brand',
                   showSecondary ? 'opacity-100' : 'opacity-0',
