@@ -25,7 +25,7 @@ interface ProductListingProps {
 /** Reads the multi-value facets out of the URL. */
 const readList = (params: URLSearchParams, key: string) => params.getAll(key).filter(Boolean);
 
-const GENDERS: Gender[] = ['men'];
+const GENDERS: Gender[] = ['men', 'women', 'unisex'];
 
 /** Only accept a gender the API actually understands. */
 const readGender = (params: URLSearchParams): Gender | undefined => {

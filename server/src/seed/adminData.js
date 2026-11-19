@@ -145,7 +145,7 @@ export const homepageSections = [
     image: image('humovare-fabric-detail', 800, 800, 'HUMOVARE fabric detail'),
     background: 'dark',
     items: [
-      { icon: 'layers', title: 'Heavyweight fabric', copy: '240–400 GSM combed cotton and brushed fleece. Substantial enough to hold a shape wash after wash.' },
+      { icon: 'layers', title: 'Heavyweight fabric', copy: '240–300 GSM combed cotton and brushed fleece. Substantial enough to hold a shape wash after wash.' },
       { icon: 'scissors', title: 'Honest construction', copy: 'Taped shoulder seams, flat-locked joins and bound necks — the details that decide whether a piece lasts.' },
       { icon: 'sparkles', title: 'Print that survives', copy: 'Water-based and high-density inks, double-cured so a graphic will not crack along the fold.' },
       { icon: 'shirt', title: 'Considered fit', copy: 'Every silhouette gets its own block — oversized, regular and boxy are drafted separately, not graded from one pattern.' },

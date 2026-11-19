@@ -8,6 +8,7 @@ import { styleOf, withStyle } from '@/lib/productStyle';
 import { ImageGalleryInput } from '@/components/common/ImageInput';
 import { ImageSizeGuide } from '@/components/common/ImageSizeGuide';
 import { VariantsEditor, type VariantDraft } from '@/components/common/VariantsEditor';
+import { LinesInput, HIGHLIGHTS_EXAMPLE, CARE_EXAMPLE } from '@/components/common/LinesInput';
 import { colourProblems, colorsForApi } from '@/lib/productColours';
 import { getErrorMessage } from '@/api/client';
 import { queryKeys } from '@/lib/queryKeys';
@@ -23,7 +24,9 @@ import {
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || (import.meta.env.PROD ? 'https://humovare.in' : 'http://localhost:5173');
 
-const TABS = ['General', 'Pricing', 'Variants', 'Media', 'SEO', 'Visibility'] as const;
+const TABS = ['General', 'Details', 'Pricing', 'Variants', 'Media', 'SEO', 'Visibility'] as const;
+const FITS = ['oversized', 'regular', 'relaxed', 'slim', 'boxy'];
+const GENDERS = ['men', 'women', 'unisex'];
 type Tab = (typeof TABS)[number];
 
 /**
@@ -191,14 +194,51 @@ export function ProductEditorPage() {
                 ))}
               </Select>
 
+              <Input label="Brand" value={String(value('brand') ?? '')} onChange={(e) => set('brand', e.target.value)} disabled={readOnly} />
+            </div>
+          </div>
+        </Panel>
+      )}
+
+      {tab === 'Details' && (
+        <Panel
+          title="Product details"
+          description="What the storefront lists under Product details and Wash care. Colours and sizes come from the Variants tab."
+          className="max-w-3xl"
+        >
+          <div className="space-y-4 p-5">
+            <div className="grid gap-4 sm:grid-cols-2">
               <Select label="Fit" value={String(value('fit') ?? 'regular')} onChange={(e) => set('fit', e.target.value)} disabled={readOnly}>
-                {['oversized', 'regular', 'relaxed', 'slim', 'boxy'].map((fit) => (
+                {FITS.map((fit) => (
                   <option key={fit} value={fit}>{fit}</option>
                 ))}
               </Select>
-
-              <Input label="Brand" value={String(value('brand') ?? '')} onChange={(e) => set('brand', e.target.value)} disabled={readOnly} />
+              <Select label="Gender" value={String(value('gender') ?? 'men')} onChange={(e) => set('gender', e.target.value)} disabled={readOnly}>
+                {GENDERS.map((gender) => (
+                  <option key={gender} value={gender}>{gender}</option>
+                ))}
+              </Select>
             </div>
+
+            <LinesInput
+              key={`highlights-${product._id}`}
+              label="Highlights"
+              value={value('highlights') as string[]}
+              onChange={(next) => set('highlights', next)}
+              placeholder={HIGHLIGHTS_EXAMPLE}
+              hint="The bullet points under Product details. One per line."
+              disabled={readOnly}
+            />
+
+            <LinesInput
+              key={`care-${product._id}`}
+              label="Wash care"
+              value={value('careInstructions') as string[]}
+              onChange={(next) => set('careInstructions', next)}
+              placeholder={CARE_EXAMPLE}
+              hint="Shown under Wash care. One per line — leave empty to hide the section."
+              disabled={readOnly}
+            />
           </div>
         </Panel>
       )}

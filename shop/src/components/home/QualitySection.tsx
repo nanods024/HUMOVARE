@@ -5,7 +5,7 @@ const PILLARS = [
   {
     icon: Layers,
     title: 'Heavyweight fabric',
-    copy: '240–400 GSM combed cotton and brushed fleece. Substantial enough to hold a shape wash after wash.',
+    copy: '240–300 GSM combed cotton and brushed fleece. Substantial enough to hold a shape wash after wash.',
   },
   {
     icon: Scissors,

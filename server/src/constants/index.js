@@ -6,7 +6,7 @@ export const ROLES = Object.freeze({
 });
 
 /** HUMOVARE is a menswear label. Kept as an enum so the schema can grow. */
-export const GENDERS = Object.freeze(['men']);
+export const GENDERS = Object.freeze(['men', 'women', 'unisex']);
 
 
 export const FITS = Object.freeze(['oversized', 'regular', 'relaxed', 'slim', 'boxy']);

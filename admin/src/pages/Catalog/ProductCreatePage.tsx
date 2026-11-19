@@ -10,6 +10,7 @@ import { toast } from '@/store/toastStore';
 import { ImageGalleryInput } from '@/components/common/ImageInput';
 import { ImageSizeGuide } from '@/components/common/ImageSizeGuide';
 import { VariantsEditor, type VariantDraft } from '@/components/common/VariantsEditor';
+import { LinesInput, HIGHLIGHTS_EXAMPLE, CARE_EXAMPLE } from '@/components/common/LinesInput';
 import { colourProblems, colorsForApi } from '@/lib/productColours';
 import type { CloudinaryImage, ProductColor } from '@/types';
 import {
@@ -17,6 +18,7 @@ import {
 } from '@/components/ui';
 
 const FITS = ['oversized', 'regular', 'relaxed', 'slim', 'boxy'];
+const GENDERS = ['men', 'women', 'unisex'];
 
 /**
  * New product.
@@ -37,6 +39,9 @@ export function ProductCreatePage() {
   const [category, setCategory] = useState('');
   const [style, setStyle] = useState('');
   const [fit, setFit] = useState('regular');
+  const [gender, setGender] = useState('men');
+  const [highlights, setHighlights] = useState<string[]>([]);
+  const [careInstructions, setCareInstructions] = useState<string[]>([]);
   const [price, setPrice] = useState(0);
   const [mrp, setMrp] = useState(0);
   const [colors, setColors] = useState<ProductColor[]>([{ name: 'Black', slug: 'black', hex: '#111111' }]);
@@ -88,8 +93,10 @@ export function ProductCreatePage() {
       description: description.trim(),
       category,
       collections: style ? [style] : [],
-      gender: 'men',
+      gender,
       fit,
+      highlights,
+      careInstructions,
       price,
       mrp: mrp || price,
       colors: colorsForApi(colors),
@@ -180,6 +187,28 @@ export function ProductCreatePage() {
                   {FITS.map((item) => <option key={item} value={item}>{item}</option>)}
                 </Select>
               </div>
+            </div>
+          </Panel>
+
+          <Panel title="Product details" description="Listed under Product details and Wash care on the product page.">
+            <div className="space-y-4 p-5">
+              <Select label="Gender" value={gender} onChange={(event) => setGender(event.target.value)} className="sm:max-w-xs">
+                {GENDERS.map((item) => <option key={item} value={item}>{item}</option>)}
+              </Select>
+              <LinesInput
+                label="Highlights"
+                value={highlights}
+                onChange={setHighlights}
+                placeholder={HIGHLIGHTS_EXAMPLE}
+                hint="The bullet points under Product details. One per line."
+              />
+              <LinesInput
+                label="Wash care"
+                value={careInstructions}
+                onChange={setCareInstructions}
+                placeholder={CARE_EXAMPLE}
+                hint="Shown under Wash care. One per line — leave empty to hide the section."
+              />
             </div>
           </Panel>
 

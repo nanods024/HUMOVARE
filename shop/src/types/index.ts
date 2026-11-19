@@ -1,7 +1,7 @@
 /** Shared API types. These mirror the Mongoose schemas on the server. */
 
 /** HUMOVARE is a menswear label; the enum is kept so the schema can grow. */
-export type Gender = 'men';
+export type Gender = 'men' | 'women' | 'unisex';
 export type Fit = 'oversized' | 'regular' | 'relaxed' | 'slim' | 'boxy';
 export type CategoryType = 'gender' | 'product-type' | 'collection' | 'style';
 
